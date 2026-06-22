@@ -10,6 +10,7 @@ use App\Notifications\DocumentNeedsRevisionNotification;
 use App\Notifications\DocumentRejectedNotification;
 use App\Notifications\DocumentUnderReviewNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -33,7 +34,11 @@ class DocumentReviewController extends Controller
     {
         if ($document->status === 'SUBMITTED') {
             $document->update(['status' => 'UNDER_REVIEW']);
-            $document->user->notify(new DocumentUnderReviewNotification($document));
+            try {
+                $document->user->notify(new DocumentUnderReviewNotification($document));
+            } catch (\Throwable $e) {
+                Log::error('DocumentUnderReview notification failed: ' . $e->getMessage());
+            }
         }
 
         $reviews = $document->reviews()->with('admin')->get();
@@ -84,11 +89,15 @@ class DocumentReviewController extends Controller
             'created_at'  => now(),
         ]);
 
-        match ($validated['action']) {
-            'needs_revision' => $document->user->notify(new DocumentNeedsRevisionNotification($document, $validated['notes'])),
-            'approved'       => $document->user->notify(new DocumentApprovedNotification($document, $validated['notes'])),
-            'rejected'       => $document->user->notify(new DocumentRejectedNotification($document, $validated['notes'])),
-        };
+        try {
+            match ($validated['action']) {
+                'needs_revision' => $document->user->notify(new DocumentNeedsRevisionNotification($document, $validated['notes'])),
+                'approved'       => $document->user->notify(new DocumentApprovedNotification($document, $validated['notes'])),
+                'rejected'       => $document->user->notify(new DocumentRejectedNotification($document, $validated['notes'])),
+            };
+        } catch (\Throwable $e) {
+            Log::error('Document review notification failed: ' . $e->getMessage());
+        }
 
         $label = match ($validated['action']) {
             'needs_revision' => 'Document returned for revision.',

@@ -109,6 +109,47 @@
                     </li>
                 </ol>
             </div>
+
+            {{-- Test Email --}}
+            <div class="bg-white border border-slate-100 rounded-3xl p-6 space-y-4" style="box-shadow:0 1px 3px rgba(15,23,42,0.05)">
+                <div>
+                    <p class="font-semibold text-slate-800">Send a Test Email</p>
+                    <p class="text-sm text-slate-500 mt-0.5">Verify your mail configuration is working. The test email will be sent using the currently active <code>MAIL_MAILER</code>.</p>
+                </div>
+
+                @if(session('test_success'))
+                    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-2xl text-sm">
+                        <i class="fa-solid fa-check-circle mr-2"></i>{{ session('test_success') }}
+                    </div>
+                @endif
+
+                @if(session('test_error'))
+                    <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-2xl text-sm">
+                        <i class="fa-solid fa-triangle-exclamation mr-2"></i>{{ session('test_error') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('admin.config.test-email') }}" method="POST" class="flex items-end gap-x-3">
+                    @csrf
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5">Recipient Email Address</label>
+                        <input type="email" name="test_email"
+                               value="{{ old('test_email', auth()->user()->email) }}"
+                               placeholder="admin@example.com"
+                               class="w-full border-slate-200 rounded-xl text-sm focus:ring-red-500 focus:border-red-500">
+                    </div>
+                    <button type="submit"
+                            class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-sm font-semibold rounded-2xl transition flex-shrink-0">
+                        <i class="fa-solid fa-paper-plane mr-1.5"></i>Send Test Email
+                    </button>
+                </form>
+
+                <p class="text-xs text-slate-400">
+                    Active mailer: <code class="bg-slate-100 px-1 rounded">{{ config('mail.default') }}</code>
+                    &nbsp;·&nbsp;
+                    From: <code class="bg-slate-100 px-1 rounded">{{ config('mail.from.address') }}</code>
+                </p>
+            </div>
         </div>
     </div>
 

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Notifications\DocumentResubmittedNotification;
 use App\Notifications\DocumentSubmittedNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
@@ -54,7 +55,11 @@ class DocumentController extends Controller
 
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
-            $admin->notify(new DocumentSubmittedNotification($document));
+            try {
+                $admin->notify(new DocumentSubmittedNotification($document));
+            } catch (\Throwable $e) {
+                Log::error('DocumentSubmitted notification failed: ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('documents.index')
@@ -104,7 +109,11 @@ class DocumentController extends Controller
 
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
-            $admin->notify(new DocumentResubmittedNotification($document));
+            try {
+                $admin->notify(new DocumentResubmittedNotification($document));
+            } catch (\Throwable $e) {
+                Log::error('DocumentResubmitted notification failed: ' . $e->getMessage());
+            }
         }
 
         return redirect()->route('documents.show', $document)

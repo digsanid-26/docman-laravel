@@ -48,6 +48,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/config', [ConfigController::class, 'index'])->name('config.index');
     Route::patch('/config/account', [ConfigController::class, 'updateAccount'])->name('config.account');
     Route::patch('/config/templates', [ConfigController::class, 'updateTemplates'])->name('config.templates');
+    Route::post('/config/test-email', [ConfigController::class, 'sendTestEmail'])->name('config.test-email');
 
     Route::get('/gmail/redirect', [GmailOAuthController::class, 'redirect'])->name('gmail.redirect');
     Route::get('/gmail/callback', [GmailOAuthController::class, 'callback'])->name('gmail.callback');
