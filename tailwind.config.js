@@ -9,6 +9,13 @@ export default {
         './resources/views/**/*.blade.php',
     ],
 
+    safelist: [
+        'bg-slate-800', 'bg-slate-900', 'hover:bg-slate-900', 'hover:bg-black',
+        'bg-orange-500', 'bg-orange-600', 'hover:bg-orange-600', 'hover:bg-orange-700',
+        'bg-emerald-600', 'hover:bg-emerald-700',
+        'bg-red-600', 'hover:bg-red-700',
+    ],
+
     theme: {
         extend: {
             fontFamily: {
