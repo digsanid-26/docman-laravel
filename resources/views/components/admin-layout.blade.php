@@ -101,7 +101,13 @@
                 {{-- Notification Bell --}}
                 <a href="{{ route('notifications.index') }}" class="relative w-9 h-9 flex items-center justify-center text-slate-500 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition">
                     <i class="fa-solid fa-bell text-sm"></i>
-                    @php $unreadCount = auth()->user()->unreadNotifications()->count(); @endphp
+                    @php
+                        try {
+                            $unreadCount = auth()->user()->unreadNotifications()->count();
+                        } catch (\Exception $e) {
+                            $unreadCount = 0;
+                        }
+                    @endphp
                     @if($unreadCount > 0)
                         <span class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                             {{ $unreadCount > 9 ? '9+' : $unreadCount }}

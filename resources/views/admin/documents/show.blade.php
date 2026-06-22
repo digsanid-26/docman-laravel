@@ -205,16 +205,21 @@
                             @error('notes') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <button type="submit"
-                                :class="{
-                                    'bg-orange-600 hover:bg-orange-700': action === 'needs_revision',
-                                    'bg-emerald-600 hover:bg-emerald-700': action === 'approved',
-                                    'bg-red-600 hover:bg-red-700': action === 'rejected',
-                                    'bg-slate-900 hover:bg-black': action === ''
-                                }"
-                                class="w-full h-11 text-white font-semibold text-sm rounded-3xl transition flex items-center justify-center gap-x-2">
-                            <i class="fa-solid fa-paper-plane text-xs"></i>
-                            <span x-text="action === 'needs_revision' ? 'Minta Revisi' : action === 'approved' ? 'Setujui Dokumen' : action === 'rejected' ? 'Tolak Dokumen' : 'Kirim Keputusan'"></span>
+                        <button type="submit" x-show="action === ''"
+                                class="w-full h-11 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-sm rounded-3xl transition flex items-center justify-center gap-x-2">
+                            <i class="fa-solid fa-paper-plane text-xs"></i> Kirim Keputusan
+                        </button>
+                        <button type="submit" x-show="action === 'needs_revision'"
+                                class="w-full h-11 bg-orange-600 hover:bg-orange-700 text-white font-semibold text-sm rounded-3xl transition flex items-center justify-center gap-x-2">
+                            <i class="fa-solid fa-exclamation-triangle text-xs"></i> Minta Revisi
+                        </button>
+                        <button type="submit" x-show="action === 'approved'"
+                                class="w-full h-11 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm rounded-3xl transition flex items-center justify-center gap-x-2">
+                            <i class="fa-solid fa-check-circle text-xs"></i> Setujui Dokumen
+                        </button>
+                        <button type="submit" x-show="action === 'rejected'"
+                                class="w-full h-11 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-3xl transition flex items-center justify-center gap-x-2">
+                            <i class="fa-solid fa-times-circle text-xs"></i> Tolak Dokumen
                         </button>
                         <p class="text-[11px] text-slate-400 text-center">Email & notifikasi otomatis dikirim ke user</p>
                     </div>

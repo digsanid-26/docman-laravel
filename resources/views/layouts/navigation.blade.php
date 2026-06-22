@@ -28,7 +28,13 @@
             <div class="hidden sm:flex sm:items-center sm:gap-x-2">
 
                 {{-- Notification Bell --}}
-                @php $unreadCount = Auth::user()->unreadNotifications()->count(); @endphp
+                @php
+                    try {
+                        $unreadCount = Auth::user()->unreadNotifications()->count();
+                    } catch (\Exception $e) {
+                        $unreadCount = 0;
+                    }
+                @endphp
                 <a href="{{ route('notifications.index') }}"
                    class="relative w-9 h-9 flex items-center justify-center text-slate-500 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition">
                     <i class="fa-solid fa-bell text-sm"></i>
