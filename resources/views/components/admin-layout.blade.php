@@ -97,6 +97,17 @@
                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                     Lihat Situs
                 </a>
+
+                {{-- Notification Bell --}}
+                <a href="{{ route('notifications.index') }}" class="relative w-9 h-9 flex items-center justify-center text-slate-500 hover:text-slate-900 rounded-xl hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-bell text-sm"></i>
+                    @php $unreadCount = auth()->user()->unreadNotifications()->count(); @endphp
+                    @if($unreadCount > 0)
+                        <span class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                            {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                        </span>
+                    @endif
+                </a>
                 <div class="flex items-center gap-x-2 pl-3 border-l border-slate-100">
                     <div class="text-right hidden sm:block">
                         <div class="text-sm font-medium text-slate-800 leading-none">{{ auth()->user()->name }}</div>

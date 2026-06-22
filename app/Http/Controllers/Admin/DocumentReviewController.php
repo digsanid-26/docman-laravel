@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Mail\DocumentApproved;
-use App\Mail\DocumentNeedsRevision;
-use App\Mail\DocumentRejected;
 use App\Models\Document;
 use App\Models\DocumentReview;
+use App\Notifications\DocumentApprovedNotification;
+use App\Notifications\DocumentNeedsRevisionNotification;
+use App\Notifications\DocumentRejectedNotification;
+use App\Notifications\DocumentUnderReviewNotification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -33,6 +33,7 @@ class DocumentReviewController extends Controller
     {
         if ($document->status === 'SUBMITTED') {
             $document->update(['status' => 'UNDER_REVIEW']);
+            $document->user->notify(new DocumentUnderReviewNotification($document));
         }
 
         $reviews = $document->reviews()->with('admin')->get();
@@ -84,9 +85,9 @@ class DocumentReviewController extends Controller
         ]);
 
         match ($validated['action']) {
-            'needs_revision' => Mail::to($document->user->email)->queue(new DocumentNeedsRevision($document)),
-            'approved'       => Mail::to($document->user->email)->queue(new DocumentApproved($document)),
-            'rejected'       => Mail::to($document->user->email)->queue(new DocumentRejected($document)),
+            'needs_revision' => $document->user->notify(new DocumentNeedsRevisionNotification($document, $validated['notes'])),
+            'approved'       => $document->user->notify(new DocumentApprovedNotification($document, $validated['notes'])),
+            'rejected'       => $document->user->notify(new DocumentRejectedNotification($document, $validated['notes'])),
         };
 
         $label = match ($validated['action']) {

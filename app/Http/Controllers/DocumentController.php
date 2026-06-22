@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
-use App\Mail\DocumentSubmitted;
 use App\Models\User;
+use App\Notifications\DocumentSubmittedNotification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
@@ -54,7 +53,7 @@ class DocumentController extends Controller
 
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
-            Mail::to($admin->email)->queue(new DocumentSubmitted($document, $admin));
+            $admin->notify(new DocumentSubmittedNotification($document));
         }
 
         return redirect()->route('documents.index')
