@@ -4,16 +4,49 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class Document extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'title', 'document_type', 'document_date',
+        'user_id', 'title', 'slug', 'document_type', 'document_date',
         'description', 'file_path', 'approved_file_path',
         'status', 'reviewed_by', 'admin_notes', 'approved_at',
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Document $document) {
+            if (empty($document->slug)) {
+                $document->slug = static::generateUniqueSlug($document->title);
+            }
+        });
+    }
+
+    public static function generateUniqueSlug(string $title): string
+    {
+        $slug = Str::slug($title);
+        if (empty($slug)) {
+            $slug = 'document';
+        }
+        $original = $slug;
+        $count = 1;
+
+        while (static::where('slug', $slug)->exists()) {
+            $slug = $original . '-' . $count++;
+        }
+
+        return $slug;
+    }
 
     protected $casts = [
         'document_date' => 'date',
