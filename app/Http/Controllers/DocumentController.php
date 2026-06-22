@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use App\Models\User;
+use App\Notifications\DocumentResubmittedNotification;
 use App\Notifications\DocumentSubmittedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -68,5 +69,45 @@ class DocumentController extends Controller
 
         $reviews = $document->reviews()->with('admin')->get();
         return view('documents.show', compact('document', 'reviews'));
+    }
+
+    public function resubmit(Request $request, Document $document)
+    {
+        if ($document->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        if ($document->status !== 'NEEDS_REVISION') {
+            return back()->with('error', 'Dokumen tidak dalam status perlu revisi.');
+        }
+
+        $validated = $request->validate([
+            'file'            => 'required|file|mimes:pdf,doc,docx,jpg,png|max:10240',
+            'revision_notes'  => 'nullable|string|max:500',
+        ], [
+            'file.required' => 'File revisi wajib diunggah.',
+            'file.mimes'    => 'Format file harus PDF, DOC, DOCX, JPG, atau PNG.',
+            'file.max'      => 'Ukuran file maksimal 10 MB.',
+        ]);
+
+        Storage::disk('local')->delete($document->file_path);
+
+        $path = $request->file('file')->store('documents/' . auth()->id(), 'local');
+
+        $document->update([
+            'file_path'   => $path,
+            'status'      => 'SUBMITTED',
+            'admin_notes' => $validated['revision_notes'] ? '[Catatan revisi] ' . $validated['revision_notes'] : $document->admin_notes,
+            'reviewed_by' => null,
+            'approved_at' => null,
+        ]);
+
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new DocumentResubmittedNotification($document));
+        }
+
+        return redirect()->route('documents.show', $document)
+            ->with('success', 'Revisi berhasil dikirim! Admin akan mereview kembali dokumen Anda.');
     }
 }

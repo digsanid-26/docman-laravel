@@ -127,32 +127,74 @@
                 </h4>
 
                 <form method="POST" action="{{ route('admin.documents.review', $document) }}"
-                      onsubmit="return confirm('Yakin ingin melanjutkan aksi ini?')">
+                      x-data="{ action: '{{ old('action', '') }}' }"
+                      @submit.prevent="if(!action){ alert('Pilih aksi terlebih dahulu.'); return; } if(confirm('Yakin ingin melanjutkan aksi ini?')) $el.submit()">
                     @csrf
 
                     <div class="space-y-4">
                         {{-- Action selector --}}
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Aksi <span class="text-red-500">*</span></label>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                                Aksi <span class="text-red-500">*</span>
+                            </label>
                             <div class="space-y-2">
-                                @foreach([
-                                    ['value' => 'needs_revision', 'label' => 'Perlu Revisi',  'icon' => 'fa-exclamation-triangle', 'checked' => 'border-orange-500 bg-orange-50', 'unchecked' => 'border-slate-200 hover:border-orange-300'],
-                                    ['value' => 'approved',       'label' => 'Setujui',        'icon' => 'fa-check-circle',        'checked' => 'border-emerald-500 bg-emerald-50', 'unchecked' => 'border-slate-200 hover:border-emerald-300'],
-                                    ['value' => 'rejected',       'label' => 'Tolak',          'icon' => 'fa-times-circle',        'checked' => 'border-red-500 bg-red-50', 'unchecked' => 'border-slate-200 hover:border-red-300'],
-                                ] as $act)
-                                <label class="flex items-center gap-x-3 p-3 border-2 rounded-2xl cursor-pointer transition {{ old('action') === $act['value'] ? $act['checked'] : $act['unchecked'] }} has-[:checked]:{{ $act['checked'] }}">
-                                    <input type="radio" name="action" value="{{ $act['value'] }}" class="hidden"
-                                           {{ old('action') === $act['value'] ? 'checked' : '' }}
-                                           onchange="this.closest('form').querySelectorAll('label').forEach(l => l.classList.remove(...'{{ $act['checked'] }}'.split(' '))); this.closest('label').classList.add(...'{{ $act['checked'] }}'.split(' '))">
-                                    <i class="fa-solid {{ $act['icon'] }} text-sm text-slate-400 w-4 text-center"></i>
-                                    <span class="text-sm font-medium text-slate-700">{{ $act['label'] }}</span>
+
+                                {{-- Perlu Revisi --}}
+                                <label @click="action = 'needs_revision'"
+                                       :class="action === 'needs_revision'
+                                           ? 'border-orange-500 bg-orange-50 ring-1 ring-orange-400'
+                                           : 'border-slate-200 hover:border-orange-300 bg-white'"
+                                       class="flex items-center gap-x-3 p-3 border-2 rounded-2xl cursor-pointer transition">
+                                    <div :class="action === 'needs_revision' ? 'bg-orange-500 border-orange-500' : 'border-slate-300 bg-white'"
+                                         class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition">
+                                        <div x-show="action === 'needs_revision'" class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                    </div>
+                                    <input type="radio" name="action" value="needs_revision" x-model="action" class="hidden">
+                                    <i class="fa-solid fa-exclamation-triangle text-sm w-4 text-center transition"
+                                       :class="action === 'needs_revision' ? 'text-orange-500' : 'text-slate-400'"></i>
+                                    <span class="text-sm font-medium transition"
+                                          :class="action === 'needs_revision' ? 'text-orange-700' : 'text-slate-700'">Perlu Revisi</span>
                                 </label>
-                                @endforeach
+
+                                {{-- Setujui --}}
+                                <label @click="action = 'approved'"
+                                       :class="action === 'approved'
+                                           ? 'border-emerald-500 bg-emerald-50 ring-1 ring-emerald-400'
+                                           : 'border-slate-200 hover:border-emerald-300 bg-white'"
+                                       class="flex items-center gap-x-3 p-3 border-2 rounded-2xl cursor-pointer transition">
+                                    <div :class="action === 'approved' ? 'bg-emerald-500 border-emerald-500' : 'border-slate-300 bg-white'"
+                                         class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition">
+                                        <div x-show="action === 'approved'" class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                    </div>
+                                    <input type="radio" name="action" value="approved" x-model="action" class="hidden">
+                                    <i class="fa-solid fa-check-circle text-sm w-4 text-center transition"
+                                       :class="action === 'approved' ? 'text-emerald-500' : 'text-slate-400'"></i>
+                                    <span class="text-sm font-medium transition"
+                                          :class="action === 'approved' ? 'text-emerald-700' : 'text-slate-700'">Setujui</span>
+                                </label>
+
+                                {{-- Tolak --}}
+                                <label @click="action = 'rejected'"
+                                       :class="action === 'rejected'
+                                           ? 'border-red-500 bg-red-50 ring-1 ring-red-400'
+                                           : 'border-slate-200 hover:border-red-300 bg-white'"
+                                       class="flex items-center gap-x-3 p-3 border-2 rounded-2xl cursor-pointer transition">
+                                    <div :class="action === 'rejected' ? 'bg-red-500 border-red-500' : 'border-slate-300 bg-white'"
+                                         class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition">
+                                        <div x-show="action === 'rejected'" class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                    </div>
+                                    <input type="radio" name="action" value="rejected" x-model="action" class="hidden">
+                                    <i class="fa-solid fa-times-circle text-sm w-4 text-center transition"
+                                       :class="action === 'rejected' ? 'text-red-500' : 'text-slate-400'"></i>
+                                    <span class="text-sm font-medium transition"
+                                          :class="action === 'rejected' ? 'text-red-700' : 'text-slate-700'">Tolak</span>
+                                </label>
+
                             </div>
                             @error('action') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        {{-- Notes --}}
+                        {{-- Submit button color changes with action --}}
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
                                 Catatan <span class="text-red-500">*</span>
@@ -164,11 +206,17 @@
                         </div>
 
                         <button type="submit"
-                                class="w-full h-11 bg-slate-900 hover:bg-black text-white font-semibold text-sm rounded-3xl transition flex items-center justify-center gap-x-2">
+                                :class="{
+                                    'bg-orange-600 hover:bg-orange-700': action === 'needs_revision',
+                                    'bg-emerald-600 hover:bg-emerald-700': action === 'approved',
+                                    'bg-red-600 hover:bg-red-700': action === 'rejected',
+                                    'bg-slate-900 hover:bg-black': action === ''
+                                }"
+                                class="w-full h-11 text-white font-semibold text-sm rounded-3xl transition flex items-center justify-center gap-x-2">
                             <i class="fa-solid fa-paper-plane text-xs"></i>
-                            Kirim Keputusan
+                            <span x-text="action === 'needs_revision' ? 'Minta Revisi' : action === 'approved' ? 'Setujui Dokumen' : action === 'rejected' ? 'Tolak Dokumen' : 'Kirim Keputusan'"></span>
                         </button>
-                        <p class="text-[11px] text-slate-400 text-center">Email notifikasi otomatis dikirim ke user</p>
+                        <p class="text-[11px] text-slate-400 text-center">Email & notifikasi otomatis dikirim ke user</p>
                     </div>
                 </form>
             </div>
