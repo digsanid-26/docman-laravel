@@ -21,6 +21,16 @@ class Document extends Model
         return 'slug';
     }
 
+    public function getRouteKey(): mixed
+    {
+        return $this->slug ?? $this->id;
+    }
+
+    public function resolveRouteBinding($value, $field = null): ?static
+    {
+        return $this->where('slug', $value)->orWhere('id', $value)->first();
+    }
+
     protected static function boot(): void
     {
         parent::boot();

@@ -16,7 +16,7 @@ return new class extends Migration
 
         // Populate slug for existing records
         Document::whereNull('slug')->get()->each(function ($doc) {
-            $slug = Str::slug($doc->title);
+            $slug = Str::slug($doc->title) ?: 'document';
             $original = $slug;
             $count = 1;
 
@@ -24,11 +24,7 @@ return new class extends Migration
                 $slug = $original . '-' . $count++;
             }
 
-            $doc->updateQuietly(['slug' => $slug ?: 'document-' . $doc->id]);
-        });
-
-        Schema::table('documents', function (Blueprint $table) {
-            $table->string('slug')->nullable(false)->change();
+            $doc->updateQuietly(['slug' => $slug]);
         });
     }
 
