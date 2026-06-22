@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Document;
+use App\Models\Setting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -20,14 +21,19 @@ class DocumentSubmittedNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
+        $tpl  = Setting::emailTemplate('submitted');
+        $vars = [
+            'name'           => $notifiable->name,
+            'document_title' => $this->document->title,
+            'document_type'  => $this->document->document_type,
+            'sender_name'    => $this->document->user->name,
+            'notes'          => '',
+        ];
         return (new MailMessage)
-            ->subject('[DMS Docman] Dokumen Baru: ' . $this->document->title)
-            ->greeting('Halo, ' . $notifiable->name)
-            ->line('Dokumen baru telah dikirim oleh **' . $this->document->user->name . '** dan menunggu review Anda.')
-            ->line('**Judul:** ' . $this->document->title)
-            ->line('**Jenis:** ' . $this->document->document_type)
-            ->action('Review Dokumen', route('admin.documents.show', $this->document))
-            ->line('Harap segera direview.');
+            ->subject(Setting::resolvePlaceholders($tpl['subject'], $vars))
+            ->greeting('Hello, ' . $notifiable->name)
+            ->line(Setting::resolvePlaceholders($tpl['body'], $vars))
+            ->action('Review Document', route('admin.documents.show', $this->document));
     }
 
     public function toDatabase(object $notifiable): array

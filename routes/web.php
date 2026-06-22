@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\GmailOAuthController;
 use App\Http\Controllers\Admin\DocumentReviewController;
 use App\Http\Controllers\Admin\ExportController;
@@ -44,7 +45,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/documents/{document}/review', [DocumentReviewController::class, 'review'])->name('documents.review');
     Route::get('/documents/{document}/download', [DocumentReviewController::class, 'download'])->name('documents.download');
 
-    Route::get('/gmail', [GmailOAuthController::class, 'index'])->name('gmail.index');
+    Route::get('/config', [ConfigController::class, 'index'])->name('config.index');
+    Route::patch('/config/account', [ConfigController::class, 'updateAccount'])->name('config.account');
+    Route::patch('/config/templates', [ConfigController::class, 'updateTemplates'])->name('config.templates');
+
     Route::get('/gmail/redirect', [GmailOAuthController::class, 'redirect'])->name('gmail.redirect');
     Route::get('/gmail/callback', [GmailOAuthController::class, 'callback'])->name('gmail.callback');
 });

@@ -59,10 +59,10 @@
                 <i class="fa-solid fa-file-excel w-4 text-center"></i>
                 <span>Export Excel</span>
             </a>
-            <a href="{{ route('admin.gmail.index') }}"
-               class="flex items-center gap-x-3 px-4 py-3 rounded-2xl transition {{ request()->routeIs('admin.gmail.*') ? 'nav-active text-white' : 'text-white/70 hover:text-white hover:bg-white/5' }}">
-                <i class="fa-brands fa-google w-4 text-center"></i>
-                <span>Gmail Setup</span>
+            <a href="{{ route('admin.config.index') }}"
+               class="flex items-center gap-x-3 px-4 py-3 rounded-2xl transition {{ request()->routeIs('admin.config.*') ? 'nav-active text-white' : 'text-white/70 hover:text-white hover:bg-white/5' }}">
+                <i class="fa-solid fa-gear w-4 text-center"></i>
+                <span>Configuration</span>
             </a>
         </nav>
 

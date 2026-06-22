@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\Document;
+use App\Models\Setting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -21,14 +22,19 @@ class DocumentRejectedNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
+        $tpl  = Setting::emailTemplate('rejected');
+        $vars = [
+            'name'           => $notifiable->name,
+            'document_title' => $this->document->title,
+            'document_type'  => $this->document->document_type ?? '',
+            'sender_name'    => $notifiable->name,
+            'notes'          => $this->notes,
+        ];
         return (new MailMessage)
-            ->subject('[DMS Docman] Dokumen Ditolak: ' . $this->document->title)
-            ->greeting('Halo, ' . $notifiable->name)
-            ->line('Mohon maaf, dokumen **"' . $this->document->title . '"** telah **ditolak** oleh admin.')
-            ->line('**Alasan Penolakan:**')
-            ->line($this->notes)
-            ->action('Lihat Detail Dokumen', route('documents.show', $this->document))
-            ->line('Jika ada pertanyaan, silakan hubungi admin.');
+            ->subject(Setting::resolvePlaceholders($tpl['subject'], $vars))
+            ->greeting('Hello, ' . $notifiable->name)
+            ->line(Setting::resolvePlaceholders($tpl['body'], $vars))
+            ->action('View Document', route('documents.show', $this->document));
     }
 
     public function toDatabase(object $notifiable): array
