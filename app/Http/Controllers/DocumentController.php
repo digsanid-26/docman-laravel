@@ -13,7 +13,7 @@ class DocumentController extends Controller
 {
     public function index()
     {
-        $documents = auth()->user()->documents()->latest()->paginate(10);
+        $documents = auth()->user()->documents()->latest()->paginate(10)->withQueryString();
         return view('documents.index', compact('documents'));
     }
 
