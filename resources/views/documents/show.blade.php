@@ -144,7 +144,7 @@
                                     <p class="text-xs text-slate-400">PDF, DOC, DOCX, JPG, PNG — maks. 10 MB</p>
                                 </div>
                                 <input type="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png" class="hidden" required
-                                       @change="fileName = $event.target.files[0]?.name ?? ''">
+                                       x-on:change="fileName = $event.target.files[0]?.name ?? ''">
                             </label>
                             @error('file') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>

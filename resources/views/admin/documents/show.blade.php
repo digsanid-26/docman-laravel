@@ -128,7 +128,7 @@
 
                 <form method="POST" action="{{ route('admin.documents.review', $document) }}"
                       x-data="{ action: '{{ old('action', '') }}' }"
-                      @submit.prevent="if(!action){ alert('Pilih aksi terlebih dahulu.'); return; } if(confirm('Yakin ingin melanjutkan aksi ini?')) $el.submit()">
+                      x-on:submit.prevent="if(!action){ alert('Pilih aksi terlebih dahulu.'); return; } if(confirm('Yakin ingin melanjutkan aksi ini?')) $el.submit()">
                     @csrf
 
                     <div class="space-y-4">
