@@ -1,6 +1,6 @@
 @props(['title' => 'Admin Panel'])
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
     <style>
         body { font-family: 'Inter', system-ui, sans-serif; }
         .admin-sidebar { background: #0F172A; }
@@ -33,10 +36,11 @@
                 </div>
                 <div class="leading-none">
                     <span class="font-semibold text-lg tracking-tight text-white">DMS</span>
-                    <span class="font-semibold text-lg tracking-tight text-teal-400">Docman</span>
+                    <span class="font-semibold text-lg tracking-tight text-red-400">Docman</span>
                 </div>
             </div>
             <div class="mt-1 text-[11px] text-white/40 pl-0.5">Admin Panel</div>
+
         </div>
 
         <nav class="px-3 py-6 flex-1 space-y-1 text-sm">
@@ -48,7 +52,7 @@
             <a href="{{ route('admin.documents.index') }}"
                class="flex items-center gap-x-3 px-4 py-3 rounded-2xl transition {{ request()->routeIs('admin.documents.index') || request()->routeIs('admin.documents.show') ? 'nav-active text-white' : 'text-white/70 hover:text-white hover:bg-white/5' }}">
                 <i class="fa-solid fa-folder-open w-4 text-center"></i>
-                <span>Daftar Dokumen</span>
+                <span>Documents</span>
             </a>
             <a href="{{ route('admin.documents.export') }}"
                class="flex items-center gap-x-3 px-4 py-3 rounded-2xl text-white/70 hover:text-white hover:bg-white/5 transition">
@@ -59,7 +63,7 @@
 
         <div class="px-5 py-5 border-t border-white/10 mt-auto">
             <div class="flex items-center gap-x-3">
-                <div class="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">
+                <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold">
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                 </div>
                 <div class="flex-1 min-w-0">
@@ -95,7 +99,7 @@
             <div class="flex items-center gap-x-3">
                 <a href="{{ route('home') }}" class="hidden sm:flex items-center gap-x-1.5 text-xs text-slate-500 hover:text-slate-700 transition">
                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                    Lihat Situs
+                    View Site
                 </a>
 
                 {{-- Notification Bell --}}
@@ -119,7 +123,7 @@
                         <div class="text-sm font-medium text-slate-800 leading-none">{{ auth()->user()->name }}</div>
                         <div class="text-[10px] text-slate-400 mt-0.5">Admin</div>
                     </div>
-                    <div class="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                     </div>
                 </div>

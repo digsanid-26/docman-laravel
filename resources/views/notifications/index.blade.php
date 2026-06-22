@@ -1,13 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center justify-between">
-            <h2 class="font-semibold text-xl text-slate-900 tracking-tight">Notifikasi</h2>
+            <h2 class="font-semibold text-xl text-slate-900 tracking-tight">Notifications</h2>
             @if(auth()->user()->unreadNotifications()->count() > 0)
                 <form method="POST" action="{{ route('notifications.read-all') }}">
                     @csrf
                     <button type="submit"
-                            class="flex items-center gap-x-1.5 text-xs font-semibold text-teal-600 hover:text-teal-700 transition">
-                        <i class="fa-solid fa-check-double text-[10px]"></i> Tandai semua dibaca
+                            class="flex items-center gap-x-1.5 text-xs font-semibold text-red-600 hover:text-red-700 transition">
+                        <i class="fa-solid fa-check-double text-[10px]"></i> Mark all as read
                     </button>
                 </form>
             @endif
@@ -40,7 +40,7 @@
                     [$icon, $iconCls] = $iconMap[$data['type'] ?? ''] ?? ['fa-bell', 'bg-slate-100 text-slate-600'];
                     $isUnread = is_null($notif->read_at);
                 @endphp
-                <div class="flex items-start gap-x-4 px-5 py-4 border-b border-slate-100 last:border-none {{ $isUnread ? 'bg-teal-50/40' : '' }} hover:bg-slate-50 transition">
+                <div class="flex items-start gap-x-4 px-5 py-4 border-b border-slate-100 last:border-none {{ $isUnread ? 'bg-red-50/40' : '' }} hover:bg-slate-50 transition">
                     <div class="w-9 h-9 rounded-2xl {{ $iconCls }} flex items-center justify-center flex-shrink-0 mt-0.5">
                         <i class="fa-solid {{ $icon }} text-sm"></i>
                     </div>
@@ -52,13 +52,13 @@
                     </div>
                     <div class="flex items-center gap-x-2 flex-shrink-0">
                         @if($isUnread)
-                            <div class="w-2 h-2 bg-teal-500 rounded-full"></div>
+                            <div class="w-2 h-2 bg-red-500 rounded-full"></div>
                         @endif
                         <form method="POST" action="{{ route('notifications.read', $notif->id) }}">
                             @csrf
                             <button type="submit"
-                                    class="text-xs text-teal-600 hover:text-teal-700 font-medium transition"
-                                    title="{{ $isUnread ? 'Tandai dibaca & buka' : 'Buka' }}">
+                                    class="text-xs text-red-600 hover:text-red-700 font-medium transition"
+                                    title="{{ $isUnread ? 'Mark as read & open' : 'Open' }}">
                                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
                             </button>
                         </form>
@@ -67,7 +67,7 @@
                 @empty
                 <div class="px-6 py-16 text-center">
                     <i class="fa-solid fa-bell-slash text-4xl text-slate-200 mb-3 block"></i>
-                    <p class="text-slate-500 text-sm">Belum ada notifikasi.</p>
+                    <p class="text-slate-500 text-sm">No notifications yet.</p>
                 </div>
                 @endforelse
 
@@ -76,10 +76,10 @@
             @if($notifications->hasPages())
             <div class="flex justify-center gap-x-1 mt-5 text-xs">
                 @if(!$notifications->onFirstPage())
-                    <a href="{{ $notifications->previousPageUrl() }}" class="px-3 py-1.5 border border-slate-200 rounded-2xl font-medium hover:bg-white transition">Sebelumnya</a>
+                    <a href="{{ $notifications->previousPageUrl() }}" class="px-3 py-1.5 border border-slate-200 rounded-2xl font-medium hover:bg-white transition">Previous</a>
                 @endif
                 @if($notifications->hasMorePages())
-                    <a href="{{ $notifications->nextPageUrl() }}" class="px-3 py-1.5 border border-slate-200 rounded-2xl font-medium hover:bg-white transition">Selanjutnya</a>
+                    <a href="{{ $notifications->nextPageUrl() }}" class="px-3 py-1.5 border border-slate-200 rounded-2xl font-medium hover:bg-white transition">Next</a>
                 @endif
             </div>
             @endif

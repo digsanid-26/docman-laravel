@@ -1,10 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800">Dokumen Saya</h2>
+            <h2 class="font-semibold text-xl text-gray-800">My Documents</h2>
             <a href="{{ route('documents.create') }}"
-               class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
-                + Submit Dokumen
+               class="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+                + Submit Document
             </a>
         </div>
     </x-slot>
@@ -24,21 +24,21 @@
                         <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
-                        <p class="font-medium">Belum ada dokumen</p>
-                        <p class="text-sm mt-1">Mulai dengan mengirim dokumen pertama Anda.</p>
-                        <a href="{{ route('documents.create') }}" class="mt-4 inline-block text-blue-600 hover:underline text-sm">Submit Dokumen</a>
+                        <p class="font-medium">No documents yet</p>
+                        <p class="text-sm mt-1">Start by submitting your first document.</p>
+                        <a href="{{ route('documents.create') }}" class="mt-4 inline-block text-red-600 hover:underline text-sm">Submit Document</a>
                     </div>
                 @else
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50 text-gray-600 font-medium border-b border-gray-200">
                             <tr>
-                                <th class="px-6 py-3 text-left">No</th>
-                                <th class="px-6 py-3 text-left">Judul</th>
-                                <th class="px-6 py-3 text-left">Jenis</th>
-                                <th class="px-6 py-3 text-left">Tanggal Dokumen</th>
+                                <th class="px-6 py-3 text-left">#</th>
+                                <th class="px-6 py-3 text-left">Title</th>
+                                <th class="px-6 py-3 text-left">Type</th>
+                                <th class="px-6 py-3 text-left">Document Date</th>
                                 <th class="px-6 py-3 text-left">Status</th>
-                                <th class="px-6 py-3 text-left">Dikirim</th>
-                                <th class="px-6 py-3 text-left">Aksi</th>
+                                <th class="px-6 py-3 text-left">Submitted</th>
+                                <th class="px-6 py-3 text-left">Action</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
@@ -55,7 +55,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-gray-500">{{ $doc->created_at->format('d/m/Y') }}</td>
                                 <td class="px-6 py-4">
-                                    <a href="{{ route('documents.show', $doc) }}" class="text-blue-600 hover:underline text-xs font-medium">Detail</a>
+                                    <a href="{{ route('documents.show', $doc) }}" class="text-red-600 hover:underline text-xs font-medium">View</a>
                                 </td>
                             </tr>
                             @endforeach

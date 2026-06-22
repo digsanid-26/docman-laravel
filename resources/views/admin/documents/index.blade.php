@@ -1,4 +1,4 @@
-<x-admin-layout title="Daftar Dokumen">
+<x-admin-layout title="All Documents">
 
     @if(session('success'))
         <div class="mb-5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-2xl text-sm flex items-center gap-x-2">
@@ -9,8 +9,8 @@
     {{-- Header Actions --}}
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-y-4 mb-5">
         <div>
-            <h2 class="font-semibold text-xl text-slate-900">Semua Dokumen</h2>
-            <p class="text-xs text-slate-500 mt-0.5">{{ $documents->total() }} dokumen ditemukan{{ $status ? ' — filter: ' . $status : '' }}</p>
+            <h2 class="font-semibold text-xl text-slate-900">All Documents</h2>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $documents->total() }} document(s) found{{ $status ? ' — filter: ' . $status : '' }}</p>
         </div>
         <div class="flex items-center gap-x-3">
             <a href="{{ route('admin.documents.export', $status ? ['status' => $status] : []) }}"
@@ -32,12 +32,12 @@
             'REJECTED'       => \App\Models\Document::where('status','REJECTED')->count(),
         ];
         $tabs = [
-            ''               => ['label' => 'Semua',        'badge' => 'bg-slate-200 text-slate-600'],
-            'SUBMITTED'      => ['label' => 'Dikirim',       'badge' => 'bg-blue-100 text-blue-600'],
-            'UNDER_REVIEW'   => ['label' => 'Direview',      'badge' => 'bg-amber-100 text-amber-600'],
-            'NEEDS_REVISION' => ['label' => 'Perlu Revisi',  'badge' => 'bg-orange-100 text-orange-600'],
-            'APPROVED'       => ['label' => 'Disetujui',     'badge' => 'bg-emerald-100 text-emerald-600'],
-            'REJECTED'       => ['label' => 'Ditolak',       'badge' => 'bg-red-100 text-red-600'],
+            ''               => ['label' => 'All',            'badge' => 'bg-slate-200 text-slate-600'],
+            'SUBMITTED'      => ['label' => 'Submitted',      'badge' => 'bg-blue-100 text-blue-600'],
+            'UNDER_REVIEW'   => ['label' => 'Under Review',   'badge' => 'bg-amber-100 text-amber-600'],
+            'NEEDS_REVISION' => ['label' => 'Needs Revision', 'badge' => 'bg-orange-100 text-orange-600'],
+            'APPROVED'       => ['label' => 'Approved',       'badge' => 'bg-emerald-100 text-emerald-600'],
+            'REJECTED'       => ['label' => 'Rejected',       'badge' => 'bg-red-100 text-red-600'],
         ];
     @endphp
     <div class="flex flex-wrap gap-2 mb-5">
@@ -60,12 +60,12 @@
                 <thead>
                     <tr class="bg-slate-50 text-slate-500 uppercase text-[11px] tracking-wide font-semibold">
                         <th class="px-6 py-4 text-left w-12">No</th>
-                        <th class="px-6 py-4 text-left">Judul Dokumen</th>
-                        <th class="px-6 py-4 text-left w-32">Jenis</th>
-                        <th class="px-6 py-4 text-left w-40">Pengirim</th>
+                        <th class="px-6 py-4 text-left">Document Title</th>
+                        <th class="px-6 py-4 text-left w-32">Type</th>
+                        <th class="px-6 py-4 text-left w-40">Submitted By</th>
                         <th class="px-6 py-4 text-center w-32">Status</th>
-                        <th class="px-6 py-4 text-left w-28">Dikirim</th>
-                        <th class="px-6 py-4 text-center w-36">Aksi</th>
+                        <th class="px-6 py-4 text-left w-28">Date</th>
+                        <th class="px-6 py-4 text-center w-36">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -121,7 +121,7 @@
                     <tr>
                         <td colspan="7" class="px-6 py-14 text-center text-slate-400 text-sm">
                             <i class="fa-solid fa-folder-open text-3xl text-slate-200 mb-3 block"></i>
-                            Tidak ada dokumen{{ $status ? ' dengan status ini' : '' }}.
+                            No documents found{{ $status ? ' with this status' : '' }}.
                         </td>
                     </tr>
                     @endforelse
@@ -132,14 +132,14 @@
         @if($documents->hasPages())
         <div class="flex items-center justify-between px-6 py-4 border-t border-slate-100 text-sm">
             <div class="text-slate-500 text-xs">
-                Menampilkan <span class="font-medium text-slate-700">{{ $documents->firstItem() }}-{{ $documents->lastItem() }}</span>
-                dari <span class="font-medium text-slate-700">{{ $documents->total() }}</span>
+                Showing <span class="font-medium text-slate-700">{{ $documents->firstItem() }}-{{ $documents->lastItem() }}</span>
+                of <span class="font-medium text-slate-700">{{ $documents->total() }}</span>
             </div>
             <div class="flex items-center gap-x-1">
                 @if($documents->onFirstPage())
-                    <span class="px-3 py-1.5 border border-slate-200 rounded-2xl text-xs text-slate-300 cursor-not-allowed">Sebelumnya</span>
+                    <span class="px-3 py-1.5 border border-slate-200 rounded-2xl text-xs text-slate-300 cursor-not-allowed">Previous</span>
                 @else
-                    <a href="{{ $documents->previousPageUrl() }}" class="px-3 py-1.5 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-white transition">Sebelumnya</a>
+                    <a href="{{ $documents->previousPageUrl() }}" class="px-3 py-1.5 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-white transition">Previous</a>
                 @endif
                 @foreach($documents->getUrlRange(1, $documents->lastPage()) as $page => $url)
                     @if($page == $documents->currentPage())
@@ -149,9 +149,9 @@
                     @endif
                 @endforeach
                 @if($documents->hasMorePages())
-                    <a href="{{ $documents->nextPageUrl() }}" class="px-3 py-1.5 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-white transition">Selanjutnya</a>
+                    <a href="{{ $documents->nextPageUrl() }}" class="px-3 py-1.5 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-white transition">Next</a>
                 @else
-                    <span class="px-3 py-1.5 border border-slate-200 rounded-2xl text-xs text-slate-300 cursor-not-allowed">Selanjutnya</span>
+                    <span class="px-3 py-1.5 border border-slate-200 rounded-2xl text-xs text-slate-300 cursor-not-allowed">Next</span>
                 @endif
             </div>
         </div>

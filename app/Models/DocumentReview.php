@@ -27,9 +27,9 @@ class DocumentReview extends Model
     public function actionLabel(): string
     {
         return match ($this->action) {
-            'needs_revision' => 'Perlu Revisi',
-            'approved'       => 'Disetujui',
-            'rejected'       => 'Ditolak',
+            'needs_revision' => 'Needs Revision',
+            'approved'       => 'Approved',
+            'rejected'       => 'Rejected',
             default          => $this->action,
         };
     }

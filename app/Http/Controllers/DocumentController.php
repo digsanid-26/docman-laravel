@@ -40,7 +40,7 @@ class DocumentController extends Controller
             'file.max'               => 'Ukuran file maksimal 10 MB.',
         ]);
 
-        $path = $request->file('file')->store('documents/' . auth()->id(), 'local');
+        $path = $request->file('file')->store('documents/temp/' . auth()->id(), 'local');
 
         $document = Document::create([
             'user_id'       => auth()->id(),
@@ -58,7 +58,7 @@ class DocumentController extends Controller
         }
 
         return redirect()->route('documents.index')
-            ->with('success', 'Dokumen berhasil dikirim! Admin akan segera mereview dokumen Anda.');
+            ->with('success', 'Document submitted successfully! An admin will review it shortly.');
     }
 
     public function show(Document $document)
@@ -78,7 +78,7 @@ class DocumentController extends Controller
         }
 
         if ($document->status !== 'NEEDS_REVISION') {
-            return back()->with('error', 'Dokumen tidak dalam status perlu revisi.');
+            return back()->with('error', 'This document is not pending revision.');
         }
 
         $validated = $request->validate([
@@ -92,7 +92,7 @@ class DocumentController extends Controller
 
         Storage::disk('local')->delete($document->file_path);
 
-        $path = $request->file('file')->store('documents/' . auth()->id(), 'local');
+        $path = $request->file('file')->store('documents/temp/' . auth()->id(), 'local');
 
         $document->update([
             'file_path'   => $path,
@@ -108,6 +108,6 @@ class DocumentController extends Controller
         }
 
         return redirect()->route('documents.show', $document)
-            ->with('success', 'Revisi berhasil dikirim! Admin akan mereview kembali dokumen Anda.');
+            ->with('success', 'Revision submitted! The admin will re-review your document.');
     }
 }

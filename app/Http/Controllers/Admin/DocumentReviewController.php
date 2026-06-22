@@ -44,15 +44,15 @@ class DocumentReviewController extends Controller
     public function review(Request $request, Document $document)
     {
         if ($document->isFinal()) {
-            return back()->with('error', 'Dokumen ini sudah final dan tidak bisa diubah.');
+            return back()->with('error', 'This document is already final and cannot be changed.');
         }
 
         $validated = $request->validate([
             'action' => 'required|in:needs_revision,approved,rejected',
-            'notes'  => 'required|string|max:2000',
+            'notes'  => 'required|string|max:10000',
         ], [
-            'action.required' => 'Pilih aksi review.',
-            'notes.required'  => 'Catatan wajib diisi.',
+            'action.required' => 'Please select a review action.',
+            'notes.required'  => 'Review notes are required.',
         ]);
 
         $statusMap = [
@@ -91,13 +91,13 @@ class DocumentReviewController extends Controller
         };
 
         $label = match ($validated['action']) {
-            'needs_revision' => 'Dokumen dikembalikan untuk revisi.',
-            'approved'       => 'Dokumen berhasil disetujui.',
-            'rejected'       => 'Dokumen ditolak.',
+            'needs_revision' => 'Document returned for revision.',
+            'approved'       => 'Document approved successfully.',
+            'rejected'       => 'Document rejected.',
         };
 
         return redirect()->route('admin.documents.index')
-            ->with('success', $label . ' Email notifikasi telah dikirim ke ' . $document->user->name . '.');
+            ->with('success', $label . ' Notification email sent to ' . $document->user->name . '.');
     }
 
     public function download(Document $document)
@@ -107,7 +107,7 @@ class DocumentReviewController extends Controller
             : $document->file_path;
 
         if (!Storage::disk('local')->exists($path)) {
-            abort(404, 'File tidak ditemukan.');
+            abort(404, 'File not found.');
         }
 
         return Storage::disk('local')->download($path);
@@ -123,6 +123,7 @@ class DocumentReviewController extends Controller
         $newPath = "approved/{$year}/{$month}/{$newName}";
 
         Storage::disk('local')->copy($document->file_path, $newPath);
+        Storage::disk('local')->delete($document->file_path);
 
         return $newPath;
     }

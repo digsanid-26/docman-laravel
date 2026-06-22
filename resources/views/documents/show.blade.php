@@ -3,7 +3,7 @@
         <div class="flex items-center gap-x-3">
             <a href="{{ route('documents.index') }}"
                class="flex items-center gap-x-1.5 text-sm text-slate-500 hover:text-slate-800 transition">
-                <i class="fa-solid fa-arrow-left text-xs"></i> Daftar Dokumen
+                <i class="fa-solid fa-arrow-left text-xs"></i> My Documents
             </a>
             <span class="text-slate-300">/</span>
             <h2 class="font-semibold text-slate-900 truncate max-w-xs text-sm">{{ Str::limit($document->title, 40) }}</h2>
@@ -34,9 +34,9 @@
                         <i class="fa-solid fa-exclamation-triangle text-orange-500"></i>
                     </div>
                     <div>
-                        <p class="font-semibold text-orange-800 mb-1">Dokumen Perlu Direvisi</p>
-                        <p class="text-orange-700 text-sm leading-relaxed">{{ $document->admin_notes }}</p>
-                        <p class="text-xs text-orange-500 mt-2">Silakan perbaiki dan kirim ulang dokumen menggunakan form di bawah.</p>
+                        <p class="font-semibold text-orange-800 mb-1">Document Needs Revision</p>
+                        <div class="text-orange-700 text-sm leading-relaxed prose prose-sm max-w-none">{!! $document->admin_notes !!}</div>
+                        <p class="text-xs text-orange-500 mt-2">Please make the necessary corrections and resubmit using the form below.</p>
                     </div>
                 </div>
             @elseif($document->status === 'APPROVED')
@@ -45,8 +45,8 @@
                         <i class="fa-solid fa-check-circle text-emerald-500 text-lg"></i>
                     </div>
                     <div>
-                        <p class="font-semibold text-emerald-800">Dokumen Disetujui</p>
-                        <p class="text-emerald-600 text-sm">Disetujui pada {{ $document->approved_at?->format('d/m/Y H:i') }}</p>
+                        <p class="font-semibold text-emerald-800">Document Approved</p>
+                        <p class="text-emerald-600 text-sm">Approved on {{ $document->approved_at?->format('d/m/Y H:i') }}</p>
                     </div>
                 </div>
             @elseif($document->status === 'REJECTED')
@@ -55,8 +55,8 @@
                         <i class="fa-solid fa-times-circle text-red-500 text-lg"></i>
                     </div>
                     <div>
-                        <p class="font-semibold text-red-800 mb-1">Dokumen Ditolak</p>
-                        <p class="text-red-700 text-sm leading-relaxed">{{ $document->admin_notes }}</p>
+                        <p class="font-semibold text-red-800 mb-1">Document Rejected</p>
+                        <div class="text-red-700 text-sm leading-relaxed prose prose-sm max-w-none">{!! $document->admin_notes !!}</div>
                     </div>
                 </div>
             @elseif($document->status === 'UNDER_REVIEW')
@@ -65,8 +65,8 @@
                         <i class="fa-solid fa-eye text-amber-500"></i>
                     </div>
                     <div>
-                        <p class="font-semibold text-amber-800">Sedang Direview</p>
-                        <p class="text-amber-600 text-sm">Admin sedang mereview dokumen Anda.</p>
+                        <p class="font-semibold text-amber-800">Under Review</p>
+                        <p class="text-amber-600 text-sm">An admin is currently reviewing your document.</p>
                     </div>
                 </div>
             @endif
@@ -104,17 +104,17 @@
 
                 <div class="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                        <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Tanggal Dokumen</p>
+                        <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Document Date</p>
                         <p class="font-medium text-slate-800">{{ $document->document_date->format('d/m/Y') }}</p>
                     </div>
                     <div>
-                        <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Tanggal Dikirim</p>
+                        <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Submitted</p>
                         <p class="font-medium text-slate-800">{{ $document->created_at->format('d/m/Y H:i') }}</p>
                     </div>
                 </div>
 
                 <div>
-                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-2">Deskripsi</p>
+                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-2">Description</p>
                     <p class="text-slate-700 bg-slate-50 rounded-2xl px-4 py-3 text-sm leading-relaxed">{{ $document->description }}</p>
                 </div>
             </div>
@@ -123,9 +123,9 @@
             @if($document->status === 'NEEDS_REVISION')
             <div class="bg-white border-2 border-orange-200 rounded-3xl p-6" style="box-shadow:0 1px 3px rgba(15,23,42,0.05)">
                 <h4 class="font-semibold text-slate-900 mb-1 flex items-center gap-x-2">
-                    <i class="fa-solid fa-upload text-orange-500 text-sm"></i> Kirim Ulang Revisi
+                    <i class="fa-solid fa-upload text-orange-500 text-sm"></i> Resubmit Revision
                 </h4>
-                <p class="text-xs text-slate-500 mb-5">Upload file revisi dan tambahkan catatan perubahan yang telah Anda lakukan.</p>
+                <p class="text-xs text-slate-500 mb-5">Upload your revised file and add notes describing the changes you made.</p>
 
                 <form method="POST" action="{{ route('documents.resubmit', $document) }}"
                       enctype="multipart/form-data" x-data="{ fileName: '' }">
@@ -133,15 +133,15 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
-                                File Revisi <span class="text-red-500">*</span>
+                                Revision File <span class="text-red-500">*</span>
                             </label>
                             <label class="flex items-center gap-x-3 border-2 border-dashed border-slate-200 hover:border-orange-400 rounded-2xl px-4 py-4 cursor-pointer transition"
                                    :class="fileName ? 'border-orange-400 bg-orange-50' : ''">
                                 <i class="fa-solid fa-file-arrow-up text-slate-400 text-xl flex-shrink-0"
                                    :class="fileName ? 'text-orange-500' : ''"></i>
                                 <div class="min-w-0">
-                                    <p class="text-sm font-medium text-slate-700" x-text="fileName || 'Pilih file...'"></p>
-                                    <p class="text-xs text-slate-400">PDF, DOC, DOCX, JPG, PNG — maks. 10 MB</p>
+                                    <p class="text-sm font-medium text-slate-700" x-text="fileName || 'Choose file...'"></p>
+                                    <p class="text-xs text-slate-400">PDF, DOC, DOCX, JPG, PNG — max. 10 MB</p>
                                 </div>
                                 <input type="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png" class="hidden" required
                                        x-on:change="fileName = $event.target.files[0]?.name ?? ''">
@@ -151,18 +151,18 @@
 
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
-                                Catatan Perubahan <span class="text-slate-400 font-normal normal-case">(opsional)</span>
+                                Change Notes <span class="text-slate-400 font-normal normal-case">(optional)</span>
                             </label>
                             <textarea name="revision_notes" rows="3"
                                       class="w-full border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-1 focus:ring-orange-400 focus:border-orange-400 placeholder:text-slate-400 resize-none"
-                                      placeholder="Jelaskan perubahan yang telah dilakukan...">{{ old('revision_notes') }}</textarea>
+                                      placeholder="Describe the changes you made...">{{ old('revision_notes') }}</textarea>
                             @error('revision_notes') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
 
                         <button type="submit"
                                 class="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm rounded-3xl transition flex items-center justify-center gap-x-2">
                             <i class="fa-solid fa-paper-plane text-xs"></i>
-                            Kirim Revisi
+                            Submit Revision
                         </button>
                     </div>
                 </form>
@@ -173,14 +173,14 @@
             @if($reviews->isNotEmpty())
             <div class="bg-white border border-slate-100 rounded-3xl p-6" style="box-shadow:0 1px 3px rgba(15,23,42,0.05)">
                 <h4 class="font-semibold text-slate-900 mb-4 flex items-center gap-x-2">
-                    <i class="fa-solid fa-clock-rotate-left text-slate-400 text-sm"></i> Riwayat Review
+                    <i class="fa-solid fa-clock-rotate-left text-slate-400 text-sm"></i> Review History
                 </h4>
                 <div class="space-y-3">
                     @foreach($reviews as $review)
                     <div class="border border-slate-100 rounded-2xl p-4">
                         <div class="flex justify-between items-center mb-2">
                             <div class="flex items-center gap-x-2">
-                                <div class="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center text-[10px] font-bold text-teal-700">
+                                <div class="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center text-[10px] font-bold text-red-700">
                                     {{ strtoupper(substr($review->admin->name, 0, 1)) }}
                                 </div>
                                 <span class="text-sm font-medium text-slate-700">{{ $review->admin->name }}</span>
@@ -191,7 +191,7 @@
                             <span class="text-xs text-slate-400">{{ $review->created_at->format('d/m/Y H:i') }}</span>
                         </div>
                         @if($review->notes)
-                            <p class="text-sm text-slate-600 bg-slate-50 rounded-xl px-3 py-2 mt-2">{{ $review->notes }}</p>
+                            <div class="text-sm text-slate-600 bg-slate-50 rounded-xl px-3 py-2 mt-2 prose prose-sm max-w-none">{!! $review->notes !!}</div>
                         @endif
                     </div>
                     @endforeach

@@ -93,11 +93,11 @@ class Document extends Model
     public function statusLabel(): string
     {
         return match ($this->status) {
-            'SUBMITTED'      => 'Dikirim',
-            'UNDER_REVIEW'   => 'Sedang Direview',
-            'NEEDS_REVISION' => 'Perlu Revisi',
-            'APPROVED'       => 'Disetujui',
-            'REJECTED'       => 'Ditolak',
+            'SUBMITTED'      => 'Submitted',
+            'UNDER_REVIEW'   => 'Under Review',
+            'NEEDS_REVISION' => 'Needs Revision',
+            'APPROVED'       => 'Approved',
+            'REJECTED'       => 'Rejected',
             default          => $this->status,
         };
     }
