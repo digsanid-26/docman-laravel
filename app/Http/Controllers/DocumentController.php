@@ -12,10 +12,21 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $documents = auth()->user()->documents()->latest()->paginate(10)->withQueryString();
-        return view('documents.index', compact('documents'));
+        $status  = $request->query('status');
+        $perPage = in_array((int) $request->query('per_page'), [5, 10, 20, 50])
+                   ? (int) $request->query('per_page')
+                   : 10;
+
+        $query = auth()->user()->documents()->latest();
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $documents = $query->paginate($perPage)->withQueryString();
+
+        return view('documents.index', compact('documents', 'status', 'perPage'));
     }
 
     public function create()
@@ -64,6 +75,46 @@ class DocumentController extends Controller
 
         return redirect()->route('documents.index')
             ->with('success', 'Document submitted successfully! An admin will review it shortly.');
+    }
+
+    public function destroy(Document $document)
+    {
+        if ($document->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        if ($document->file_path) {
+            Storage::disk('local')->delete($document->file_path);
+        }
+        if ($document->approved_file_path) {
+            Storage::disk('local')->delete($document->approved_file_path);
+        }
+
+        $document->delete();
+
+        return redirect()->route('documents.index')
+            ->with('success', 'Document deleted successfully.');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = array_filter((array) $request->input('ids', []));
+        if (empty($ids)) {
+            return back()->with('error', 'No documents selected.');
+        }
+
+        $documents = Document::whereIn('id', $ids)
+            ->where('user_id', auth()->id())
+            ->get();
+
+        foreach ($documents as $doc) {
+            if ($doc->file_path)          Storage::disk('local')->delete($doc->file_path);
+            if ($doc->approved_file_path) Storage::disk('local')->delete($doc->approved_file_path);
+            $doc->delete();
+        }
+
+        return redirect()->route('documents.index')
+            ->with('success', count($documents) . ' document(s) deleted.');
     }
 
     public function show(Document $document)

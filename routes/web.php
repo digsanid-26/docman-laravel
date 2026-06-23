@@ -32,6 +32,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
     Route::get('/documents/create', [DocumentController::class, 'create'])->name('documents.create');
     Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
+    Route::post('/documents/bulk-destroy', [DocumentController::class, 'bulkDestroy'])->name('documents.bulk-destroy');
+    Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     Route::get('/documents/{document}', [DocumentController::class, 'show'])->name('documents.show');
     Route::post('/documents/{document}/resubmit', [DocumentController::class, 'resubmit'])->name('documents.resubmit');
 
@@ -45,6 +47,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/approved', [ApprovedDocumentController::class, 'index'])->name('approved.index');
     Route::get('/documents', [DocumentReviewController::class, 'index'])->name('documents.index');
     Route::get('/documents/export', [ExportController::class, 'export'])->name('documents.export');
+    Route::post('/documents/bulk-destroy', [DocumentReviewController::class, 'bulkDestroy'])->name('documents.bulk-destroy');
+    Route::delete('/documents/{document}', [DocumentReviewController::class, 'destroy'])->name('documents.destroy');
     Route::get('/documents/{document}', [DocumentReviewController::class, 'show'])->name('documents.show');
     Route::post('/documents/{document}/review', [DocumentReviewController::class, 'review'])->name('documents.review');
     Route::get('/documents/{document}/download', [DocumentReviewController::class, 'download'])->name('documents.download');
