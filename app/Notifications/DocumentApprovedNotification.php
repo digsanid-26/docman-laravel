@@ -27,7 +27,7 @@ class DocumentApprovedNotification extends Notification
             'document_title' => $this->document->title,
             'document_type'  => $this->document->document_type ?? '',
             'sender_name'    => $notifiable->name,
-            'notes'          => $this->notes,
+            'notes'          => strip_tags($this->notes),
         ];
         return (new MailMessage)
             ->subject(Setting::resolvePlaceholders($tpl['subject'], $vars))

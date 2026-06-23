@@ -9,7 +9,7 @@
 </table>
 <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:16px;margin:16px 0">
     <p style="font-weight:600;color:#b91c1c;margin:0 0 8px">Catatan dari Admin:</p>
-    <p style="margin:0;color:#7f1d1d">{{ $document->admin_notes }}</p>
+    <div style="margin:0;color:#7f1d1d">{!! $document->admin_notes !!}</div>
 </div>
 <a href="{{ url('/documents/' . $document->id) }}" style="display:inline-block;background:#dc2626;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600">
     Lihat Detail Dokumen

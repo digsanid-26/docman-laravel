@@ -28,7 +28,7 @@ class DocumentRejectedNotification extends Notification
             'document_title' => $this->document->title,
             'document_type'  => $this->document->document_type ?? '',
             'sender_name'    => $notifiable->name,
-            'notes'          => $this->notes,
+            'notes'          => strip_tags($this->notes),
         ];
         return (new MailMessage)
             ->subject(Setting::resolvePlaceholders($tpl['subject'], $vars))
@@ -42,7 +42,7 @@ class DocumentRejectedNotification extends Notification
         return [
             'document_id' => $this->document->id,
             'title'       => $this->document->title,
-            'message'     => 'Dokumen "' . $this->document->title . '" ditolak. Alasan: ' . Str::limit($this->notes, 80),
+            'message'     => 'Dokumen "' . $this->document->title . '" ditolak. Alasan: ' . Str::limit(strip_tags($this->notes), 80),
             'type'        => 'document_rejected',
             'url'         => route('documents.show', $this->document),
         ];

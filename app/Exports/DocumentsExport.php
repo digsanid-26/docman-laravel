@@ -52,7 +52,7 @@ class DocumentsExport implements FromCollection, WithHeadings, WithMapping, With
             $doc->document_date?->format('d/m/Y'),
             $doc->created_at->format('d/m/Y H:i'),
             $doc->status,
-            $doc->admin_notes ?? '-',
+            $doc->admin_notes ? strip_tags($doc->admin_notes) : '-',
             $doc->approved_at?->format('d/m/Y H:i') ?? '-',
             $doc->approved_file_path ?? '-',
         ];

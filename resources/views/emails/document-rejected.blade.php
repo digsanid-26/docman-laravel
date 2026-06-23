@@ -9,7 +9,7 @@
 </table>
 <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin:16px 0">
     <p style="font-weight:600;color:#374151;margin:0 0 8px">Alasan Penolakan:</p>
-    <p style="margin:0;color:#4b5563">{{ $document->admin_notes }}</p>
+    <div style="margin:0;color:#4b5563">{!! $document->admin_notes !!}</div>
 </div>
 <p>Jika ada pertanyaan, silakan hubungi tim admin.</p>
 <a href="{{ url('/documents/' . $document->id) }}" style="display:inline-block;background:#4b5563;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600">

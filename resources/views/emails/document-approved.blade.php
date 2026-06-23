@@ -11,7 +11,7 @@
 @if($document->admin_notes)
 <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px;margin:16px 0">
     <p style="font-weight:600;color:#15803d;margin:0 0 8px">Catatan Admin:</p>
-    <p style="margin:0;color:#166534">{{ $document->admin_notes }}</p>
+    <div style="margin:0;color:#166534">{!! $document->admin_notes !!}</div>
 </div>
 @endif
 <a href="{{ url('/documents/' . $document->id) }}" style="display:inline-block;background:#16a34a;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600">

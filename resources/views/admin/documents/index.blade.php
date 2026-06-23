@@ -75,7 +75,7 @@
             <input type="checkbox" id="select-all-top"
                    class="w-4 h-4 rounded border-slate-300 text-red-600 focus:ring-red-500 cursor-pointer"
                    onchange="toggleAll(this.checked)" title="Select all">
-            <select id="bulk-action-top" class="border border-slate-200 rounded-xl text-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white text-slate-700">
+            <select id="bulk-action-top" class="border border-slate-200 rounded-xl text-sm pl-3 pr-8 py-1.5 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white text-slate-700">
                 <option value="">— Bulk Action —</option>
                 <option value="delete">Delete Selected</option>
             </select>
@@ -178,7 +178,7 @@
                 <input type="checkbox" id="select-all-bot"
                        class="w-4 h-4 rounded border-slate-300 text-red-600 focus:ring-red-500 cursor-pointer"
                        onchange="toggleAll(this.checked)" title="Select all">
-                <select id="bulk-action-bot" class="border border-slate-200 rounded-xl text-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white text-slate-700">
+                <select id="bulk-action-bot" class="border border-slate-200 rounded-xl text-sm pl-3 pr-8 py-1.5 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white text-slate-700">
                     <option value="">— Bulk Action —</option>
                     <option value="delete">Delete Selected</option>
                 </select>
@@ -197,7 +197,7 @@
                     @endif
                     <input type="hidden" name="page" value="1">
                     <select name="per_page" onchange="document.getElementById('per-page-form').submit()"
-                            class="border border-slate-200 rounded-xl text-sm px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white">
+                            class="border border-slate-200 rounded-xl text-sm pl-2 pr-7 py-1.5 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white">
                         @foreach([5, 10, 20, 50] as $n)
                             <option value="{{ $n }}" {{ $perPage == $n ? 'selected' : '' }}>{{ $n }}</option>
                         @endforeach
