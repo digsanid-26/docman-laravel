@@ -69,31 +69,31 @@
         <a href="{{ route('login') }}" class="font-semibold text-red-600 hover:text-red-700 transition">Sign in here</a>
     </p>
 
-</x-guest-layout>
+    @if(config('services.recaptcha.site_key'))
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}" defer></script>
+    <script>
+        window.addEventListener('load', function () {
+            document.getElementById('register-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                var form = this;
+                var btn  = document.getElementById('register-btn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i><span>Verifying…</span>';
 
-@if(config('services.recaptcha.site_key'))
-@push('scripts')
-<script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
-<script>
-    document.getElementById('register-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var form = this;
-        var btn  = document.getElementById('register-btn');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i><span>Verifying…</span>';
-
-        grecaptcha.ready(function () {
-            grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', { action: 'register' })
-                .then(function (token) {
-                    document.getElementById('g-recaptcha-response').value = token;
-                    form.submit();
-                })
-                .catch(function () {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-solid fa-user-plus text-xs"></i><span>Create Account</span>';
+                grecaptcha.ready(function () {
+                    grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', { action: 'register' })
+                        .then(function (token) {
+                            document.getElementById('g-recaptcha-response').value = token;
+                            form.submit();
+                        })
+                        .catch(function () {
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fa-solid fa-user-plus text-xs"></i><span>Create Account</span>';
+                        });
                 });
+            });
         });
-    });
-</script>
-@endpush
-@endif
+    </script>
+    @endif
+
+</x-guest-layout>
