@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ApprovedDocumentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ConfigController;
 use App\Http\Controllers\Admin\GmailOAuthController;
@@ -41,6 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/approved', [ApprovedDocumentController::class, 'index'])->name('approved.index');
     Route::get('/documents', [DocumentReviewController::class, 'index'])->name('documents.index');
     Route::get('/documents/export', [ExportController::class, 'export'])->name('documents.export');
     Route::get('/documents/{document}', [DocumentReviewController::class, 'show'])->name('documents.show');

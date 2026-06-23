@@ -106,4 +106,26 @@ class Document extends Model
     {
         return in_array($this->status, ['APPROVED', 'REJECTED']);
     }
+
+    public function activePath(): string
+    {
+        return $this->approved_file_path ?: $this->file_path;
+    }
+
+    public function fileExtension(): string
+    {
+        return strtoupper(pathinfo($this->activePath(), PATHINFO_EXTENSION));
+    }
+
+    public function fileSize(): string
+    {
+        try {
+            $bytes = \Illuminate\Support\Facades\Storage::disk('local')->size($this->activePath());
+            if ($bytes >= 1_048_576) return round($bytes / 1_048_576, 1) . ' MB';
+            if ($bytes >= 1_024)    return round($bytes / 1_024, 1) . ' KB';
+            return $bytes . ' B';
+        } catch (\Throwable) {
+            return '—';
+        }
+    }
 }

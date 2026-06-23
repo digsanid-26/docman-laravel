@@ -54,6 +54,11 @@
                 <i class="fa-solid fa-folder-open w-4 text-center"></i>
                 <span>Documents</span>
             </a>
+            <a href="{{ route('admin.approved.index') }}"
+               class="flex items-center gap-x-3 px-4 py-3 rounded-2xl transition {{ request()->routeIs('admin.approved.index') ? 'nav-active text-white' : 'text-white/70 hover:text-white hover:bg-white/5' }}">
+                <i class="fa-solid fa-circle-check w-4 text-center"></i>
+                <span>Approved Docs</span>
+            </a>
             <a href="{{ route('admin.documents.export') }}"
                class="flex items-center gap-x-3 px-4 py-3 rounded-2xl text-white/70 hover:text-white hover:bg-white/5 transition">
                 <i class="fa-solid fa-file-excel w-4 text-center"></i>
