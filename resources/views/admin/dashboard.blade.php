@@ -20,18 +20,40 @@
     {{-- Chart + Recent --}}
     <div class="grid lg:grid-cols-3 gap-5 mb-5">
 
-        {{-- Doughnut Chart --}}
-        <div class="bg-white border border-slate-100 rounded-3xl p-6 flex flex-col items-center justify-center" style="box-shadow:0 1px 3px rgba(15,23,42,0.05)">
-            <h3 class="font-semibold text-slate-900 text-sm self-start mb-4">
+        {{-- Pie Chart --}}
+        <div class="bg-white border border-slate-100 rounded-3xl p-6 flex flex-col items-center" style="box-shadow:0 1px 3px rgba(15,23,42,0.05)">
+            <h3 class="font-semibold text-slate-900 text-sm self-start mb-4 w-full">
                 <i class="fa-solid fa-chart-pie text-red-400 mr-1.5"></i> Document Status
             </h3>
+
             <div style="max-width:220px;width:100%">
                 <canvas id="statusChart"></canvas>
             </div>
+
+            {{-- Custom two-column left-aligned legend --}}
+            @php
+                $legendItems = [
+                    ['Submitted',      $stats['submitted'],      '#3B82F6'],
+                    ['Under Review',   $stats['under_review'],   '#F59E0B'],
+                    ['Needs Revision', $stats['needs_revision'], '#F97316'],
+                    ['Approved',       $stats['approved'],       '#10B981'],
+                    ['Rejected',       $stats['rejected'],       '#EF4444'],
+                ];
+            @endphp
+            <div class="w-full grid grid-cols-2 gap-x-3 gap-y-2 mt-5 text-sm text-slate-600">
+                @foreach($legendItems as [$label, $value, $color])
+                    <div class="flex items-center gap-x-2">
+                        <span class="w-3 h-3 rounded-full flex-shrink-0" style="background-color:{{ $color }}"></span>
+                        <span class="truncate">{{ $label }}</span>
+                        <span class="text-slate-400 text-xs font-mono ml-auto">{{ $value }}</span>
+                    </div>
+                @endforeach
+            </div>
+
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     new Chart(document.getElementById('statusChart'), {
-                        type: 'doughnut',
+                        type: 'pie',
                         data: {
                             labels: ['Submitted', 'Under Review', 'Needs Revision', 'Approved', 'Rejected'],
                             datasets: [{
@@ -48,9 +70,15 @@
                             }]
                         },
                         options: {
-                            cutout: '70%',
                             plugins: {
-                                legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 12 } }
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return context.label + ': ' + context.parsed;
+                                        }
+                                    }
+                                }
                             }
                         }
                     });
